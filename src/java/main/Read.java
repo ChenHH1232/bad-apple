@@ -57,6 +57,8 @@ public class Read {
 //                printColorOnePage(x, y, imagePath);
 //            }
 //        }
+        // 指定 MP3 文件路径
+        String filePath = "C:\\Users\\94359\\OneDrive\\桌面\\badapple\\music bad apple.mp3";
         Read readPages = new Read("C:/Users/94359/IdeaProjects/bad_apple/ds/16x12 5fps/_", ".jpg");
         String[] imagePaths = readPages.getImagePaths();
         System.out.println(imagePaths.length);
@@ -83,7 +85,25 @@ public class Read {
         // 使用数组索引跟踪当前图片位置
         final int[] currentIndex = {0};
 
+        // Flag to check if audio has been opened
+        final boolean[] audioOpened = {false};
+
         timer.addActionListener(e -> {
+            // 打开 MP3 文件（仅执行一次）
+            if (!audioOpened[0]) {
+                try {
+                    File mp3File = new File(filePath);
+                    if (mp3File.exists()) {
+                        Desktop.getDesktop().open(mp3File);
+                        System.out.println("MP3 文件已打开，请使用默认播放器播放。");
+                        audioOpened[0] = true; // Set flag to true to prevent reopening
+                    } else {
+                        System.out.println("MP3 文件不存在：" + filePath);
+                    }
+                } catch (IOException ex) {
+                    System.out.println("无法打开 MP3 文件: " + ex.getMessage());
+                }
+            }
             // 显示当前图片
             ImageIcon icon = new ImageIcon(imagePaths[currentIndex[0]]);
             Image scaledImage = icon.getImage().getScaledInstance(320, 240, Image.SCALE_FAST); // 放大
